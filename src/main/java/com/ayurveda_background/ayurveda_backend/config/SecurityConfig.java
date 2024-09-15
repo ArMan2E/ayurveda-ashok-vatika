@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/note/**").authenticated()
                         .requestMatchers("/user/bookmark/**").authenticated()
                         .requestMatchers("/plants/**").permitAll()
-                        .requestMatchers("/user/signup").permitAll())
+                        .requestMatchers("/user/signup","/user/login").permitAll())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.httpBasic(Customizer.withDefaults());
