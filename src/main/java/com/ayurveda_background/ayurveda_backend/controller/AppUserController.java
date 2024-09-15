@@ -1,26 +1,42 @@
 package com.ayurveda_background.ayurveda_backend.controller;
 
+import com.ayurveda_background.ayurveda_backend.Util.JwtUtil;
 import com.ayurveda_background.ayurveda_backend.entity.AppUser;
 import com.ayurveda_background.ayurveda_backend.sevice.AppUserService;
-import lombok.Getter;
+import com.ayurveda_background.ayurveda_backend.sevice.UserDetailsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class AppUserController {
 
     @Autowired
     AppUserService appUserService;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
 
 /*
 *
@@ -81,14 +97,19 @@ public class AppUserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/current-user")
-    public  String getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PostMapping("/login")
+    public  ResponseEntity<?> login(@RequestBody AppUser appUser){
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            return authentication.getName();  // Returns the current logged-in user's username
-        }
-        return "No authenticated user";
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(appUser.getUsername(),appUser.getPassword())
+            );
+            UserDetails userDetails= userDetailsService.loadUserByUsername(appUser.getUsername());
+            String jwt=jwtUtil.generateToken(userDetails.getUsername());
+            return new ResponseEntity<>(jwt,HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            log.error("Exception occurred while createAuthToken ",e);
+            return new ResponseEntity<>("Incorrect Username or password",HttpStatus.BAD_REQUEST);        }
     }
 }
 

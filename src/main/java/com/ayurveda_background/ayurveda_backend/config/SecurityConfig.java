@@ -1,5 +1,7 @@
 package com.ayurveda_background.ayurveda_backend.config;
 
+import com.ayurveda_background.ayurveda_backend.Filter.JwtFilter;
+import com.ayurveda_background.ayurveda_backend.Util.JwtUtil;
 import com.ayurveda_background.ayurveda_backend.sevice.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,6 +37,13 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    JwtFilter jwtFilter;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -55,6 +65,7 @@ public class SecurityConfig {
         //implementation created already
         //use daoAuthprovider
         //httpSecurity.authenticationProvider(authProvider());
+        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
@@ -78,16 +89,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authProvider(){
         var  daoAuthenticationProvider= new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         return daoAuthenticationProvider;
     }
 
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
