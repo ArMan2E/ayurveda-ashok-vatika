@@ -53,11 +53,13 @@ public class SecurityConfig {
         httpSecurity.cors(c->c.configurationSource(corsConfigurationSource()));
         httpSecurity
                 .authorizeHttpRequests((auth)->auth
-                        .requestMatchers("/user/note/**").authenticated()
-                        .requestMatchers("/user/bookmark/**").authenticated()
+                        //.requestMatchers("/user/note/**").authenticated()
+                        //.requestMatchers("/user/bookmark/**").authenticated()
                         .requestMatchers("/plants/**").permitAll()
-                        .requestMatchers("/user/signup","/user/login").permitAll())
+                        .requestMatchers("/user/signup","/user/login").permitAll()
+                        .anyRequest().permitAll())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.httpBasic(Customizer.withDefaults());
 

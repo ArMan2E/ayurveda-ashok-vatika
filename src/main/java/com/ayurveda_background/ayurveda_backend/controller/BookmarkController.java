@@ -42,23 +42,23 @@ public class BookmarkController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-@GetMapping("/{bookmarkId}")
-    public ResponseEntity<?> getBookmarkById(@PathVariable ObjectId bookmarkId){
+@GetMapping("/{plantId}")
+    public ResponseEntity<?> getBookmarkById(@PathVariable String plantId){
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
         String username=authentication.getName();
 
         AppUser user=appUserService.findByUserName(username);
 
         List<Bookmark> collectUserBookmark=user.getBookmarks().stream()
-                .filter(bookmark -> bookmark.getId().equals(bookmarkId))
+                .filter(bookmark -> bookmark.getPlant().getId().equals(plantId))
                 .toList();
 
-        Optional<Bookmark> bookmarkOptional=Optional.empty();
+        //Optional<Bookmark> bookmarkOptional=Optional.empty();
         if(!collectUserBookmark.isEmpty()){
-            bookmarkOptional=bookmarkService.getBookmarkById(bookmarkId);
+            //bookmarkOptional=bookmarkService.getBookmarkById(bookmarkId);
+            return new ResponseEntity<>(collectUserBookmark.getFirst().getId(),HttpStatus.OK);
         }
-        return bookmarkOptional.map(bookmark -> new ResponseEntity<>(bookmark,HttpStatus.OK))
-                .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return  new ResponseEntity<>("Not bookmarked",HttpStatus.NOT_FOUND);
     }
 
 
@@ -78,8 +78,8 @@ public class BookmarkController {
         }
     }
 
-    @DeleteMapping("{bookmarkId}")
-    public ResponseEntity<?> deleteBookmark(@PathVariable ObjectId bookmarkId){
+    @DeleteMapping("/remove/{bookmarkId}")
+    public ResponseEntity<?> deleteBookmark(@PathVariable String bookmarkId){
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
         String username=authentication.getName();
 

@@ -26,8 +26,8 @@ public class Plant {
  * this will help to manage the json serialization and deserialization
  * over the internet
  * */
-    @MongoId
-    private ObjectId id;
+    @Id
+    private String id;
     @JsonProperty("botanicalName")
     private String botanicalName;
 

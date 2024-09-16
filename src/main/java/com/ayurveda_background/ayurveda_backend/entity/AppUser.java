@@ -22,8 +22,8 @@ import java.util.List;
 
 public class AppUser {
 
-    @MongoId
-    private ObjectId id;
+    @Id
+    private String  id;
     //@Indexed(unique = true)
     @JsonProperty("username")
     private String username;

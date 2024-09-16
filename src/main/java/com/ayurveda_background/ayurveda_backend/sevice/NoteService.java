@@ -41,7 +41,7 @@ public class NoteService {
         if (user.isPresent()) {          //type void
             //updating NOT inserting
 
-           Plant newNotePlant=plantRepo.findById(note.getPlant().getId()).orElseThrow();
+           Plant newNotePlant=plantRepo.findById(note.getPlant().getId());
             // Set creation timestamp
             note.setCreatedAt(LocalDateTime.now());
             // Save the note to the repository

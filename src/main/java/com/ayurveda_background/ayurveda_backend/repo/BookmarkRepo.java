@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookmarkRepo extends MongoRepository<Bookmark, ObjectId> {
+    void deleteById(String bookmarkId);
 }
