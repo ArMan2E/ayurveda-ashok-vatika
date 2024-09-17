@@ -101,7 +101,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:5173"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost:5173","https://66e9dbd6ce9b65656e157af7--remarkable-puffpuff-396f14.netlify.app"));
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS"));
         //Header is imp it is wildcard for now
         corsConfig.setAllowedHeaders(List.of("*"));
