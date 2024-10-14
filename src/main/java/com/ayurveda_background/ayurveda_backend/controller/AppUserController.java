@@ -50,7 +50,9 @@ public class AppUserController {
     /**
      *
      * ALWAYS SAVE ROLE AS
-     * USER NEVER ROLE_USER OR ROLE_SOMETHING
+     * USER
+     *
+     * NEVER ROLE_USER OR ROLE_SOMETHING
      * */
 
 
@@ -99,7 +101,6 @@ public class AppUserController {
 
     @PostMapping("/login")
     public  ResponseEntity<?> login(@RequestBody AppUser appUser){
-
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(appUser.getUsername(),appUser.getPassword())

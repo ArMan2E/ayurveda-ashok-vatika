@@ -38,7 +38,7 @@ public class NoteController {
         String username=authentication.getName();
         AppUser appUser= appUserService.findByUserName(username);
         List<Note> allNotes=appUser.getNotes();
-        if(allNotes!=null){
+        if(!allNotes.isEmpty()){
         return new ResponseEntity<>(allNotes,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -103,7 +103,7 @@ public class NoteController {
         AppUser appUser=appUserService.findByUserName(username);
 
         List<Note> collectUserNote = appUser.getNotes().stream()
-                .filter(note -> note.getId().toString().equals(noteId))
+                .filter(note -> note.getId().equals(noteId))
                 .toList();
 
         if(collectUserNote.isEmpty()){

@@ -40,6 +40,9 @@ public class JwtFilter extends OncePerRequestFilter {
             UserDetails userDetails=userDetailsService.loadUserByUsername(username);
             if(jwtUtil.validateToken(jwt)){
                 UsernamePasswordAuthenticationToken auth= new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                // webAuthDetails class captures extra details about request
+                //can be used for custom security check for blocking sus IP or invalid session
+                //authToken now carries additional info about the req
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }

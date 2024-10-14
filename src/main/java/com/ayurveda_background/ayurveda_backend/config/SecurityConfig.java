@@ -76,6 +76,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(12);  // Strength 12
     }
 
+    /**
+     * AuthenticationConfiguration is a helpful utility class that manages the
+     * configuration for AuthenticationManager,
+     * encapsulating details like security filters and authentication providers
+     * @param authConfiguration
+     * @return
+     * @throws Exception
+     */
     @Bean
     public AuthenticationManager authManager(AuthenticationConfiguration authConfiguration) throws Exception{
         return authConfiguration.getAuthenticationManager();
